@@ -1,0 +1,26 @@
+
+.container {
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--gray-text-color);
+  margin: 12px 24px;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    background: var(--hover-btn-color);
+    border-radius: 7px;
+    color: var(--primary-text-color);
+  }
+}
+
+.container svg {
+  margin: 0 20px;
+  fill: var(--gray-text-color);
+}
+
+
+.title {
+  text-decoration: none;
+}
+
