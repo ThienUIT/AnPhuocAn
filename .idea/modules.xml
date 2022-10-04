@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/anphuocan-client.iml" filepath="$PROJECT_DIR$/.idea/anphuocan-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/exampl.iml" filepath="$PROJECT_DIR$/.idea/exampl.iml" />
     </modules>
   </component>
 </project>

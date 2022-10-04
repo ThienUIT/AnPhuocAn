@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import DatePicker from 'react-datepicker';
 import styles from './ManagementProduct.module.scss';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import InputComponent from '@/shared/components/input/InputComponent';
 
 const schema = yup
 	.object({
@@ -33,22 +34,19 @@ interface IFormInput {
 }
 
 function ManagementProduct() {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<IFormInput>({
-		resolver: yupResolver(schema),
-	});
-	const [startDate, setStartDate] = useState(new Date());
+	const { register, handleSubmit } = useForm<IFormInput>({ resolver: yupResolver(schema) });
 	const [isImport, setIsImport] = useState<boolean>(true);
+	const [startDate, setStartDate] = useState<Date>(new Date());
 
-	const onSubmit = (data: IFormInput) => console.log(data);
+	const onSubmit = (data: any) => {
+		console.log('onSubmit=>>>>:', data);
+	};
+
 	return (
 		<div className={clsx(styles.wrapper)}>
 			<label className={clsx(styles.title)}>Quản lý hàng hoá</label>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
+				<>
 					<label> {isImport ? 'Ngày nhập' : 'Ngày xuất'}</label>
 					<DatePicker
 						{...register('date')}
@@ -57,36 +55,15 @@ function ManagementProduct() {
 						selected={startDate}
 						onChange={(date: Date) => setStartDate(date)}
 					/>
-				</div>
-				<div>
-					<label> Tên mặt hàng</label>
-					<input {...register('productName')} type={'text'} />
-				</div>
-				<div>
-					<label>Số lượng</label>
-					<input {...register('quantity')} type={'text'} />
-				</div>
-				<div>
-					<label>Đơn vị tính</label>
-					<input {...register('calculateUnit')} type={'text'} />
-				</div>
-				<div>
-					<label>{isImport ? 'Giá nhập' : 'Giá xuất'}</label>
-					<input {...register('price')} type={'text'} />
-				</div>
-				<div>
-					<label>Thành tiền</label>
-					<input {...register('totalPrice')} type={'text'} />
-				</div>
-				<div>
-					<label>Nhà cung cấp</label>
-					<input {...register('provider')} type={'text'} />
-				</div>
-				<div>
-					<label>Ghi chú</label>
-					<input {...register('description')} type={'text'} />
-				</div>
-				<input type='submit' />
+				</>
+				<InputComponent register={register} name='productName' label='Tên mặt hàng' />
+				<InputComponent register={register} name='quantity' label='Số lượng' />
+				<InputComponent register={register} name='calculateUnit' label='Đơn vị tính' />
+				<InputComponent register={register} name='price' label={isImport ? 'Giá nhập' : 'Giá xuất'} />
+				<InputComponent register={register} name='totalPrice' label='Thành tiền' />
+				<InputComponent register={register} name='provider' label='Nhà cung cấp' />
+				<InputComponent register={register} name='description' label='Ghi chú' />
+				<button type='submit'>submit</button>
 			</form>
 		</div>
 	);

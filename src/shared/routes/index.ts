@@ -9,7 +9,7 @@ export interface IRoute {
 
 export const IRoutePath = {
 	home: '/',
-	product: '/product',
+	product: '/managementProduct',
 	history: '/history',
 	any: '*',
 };
