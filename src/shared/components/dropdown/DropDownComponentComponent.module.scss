@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  &-error {
+    outline: red;
+    border: 1px solid red;
+  }
+
+  & > select {
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    box-shadow: 0 0 15px 4px #0000000f;
+    &:focus-visible{
+      outline: none;
+    }
+  }
+}
+
+.label {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+
+.errorsMessage {
+  color: red;
+  margin-top: 2px;
+}

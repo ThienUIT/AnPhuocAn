@@ -1,28 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import DatePicker from 'react-datepicker';
 import styles from './ManagementProduct.module.scss';
-import { useForm } from 'react-hook-form';
+import { FieldError, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import InputComponent from '@/shared/components/input/InputComponent';
+import { errorMessages } from '@/shared/common';
+import DropDownComponent from '@/shared/components/dropdown/DropDownComponent';
 
 const schema = yup
 	.object({
-		date: yup.date().default(function () {
-			return new Date();
-		}),
-		productName: yup.string().required(),
-		quantity: yup.number().positive().integer().required(),
-		calculateUnit: yup.string().required(),
-		price: yup.number().positive().integer().required(),
-		totalPrice: yup.number().positive().integer().required(),
-		provider: yup.string().required(),
-		description: yup.string().required(),
+		status: yup.string().required(errorMessages.required),
+		productName: yup.string().required(errorMessages.required),
+		quantity: yup
+			.number()
+			.positive(errorMessages.positive)
+			.integer()
+			.required(errorMessages.required)
+			.typeError(errorMessages.number),
+		calculateUnit: yup.string().required(errorMessages.required),
+		price: yup
+			.number()
+			.positive(errorMessages.positive)
+			.integer()
+			.required(errorMessages.required)
+			.typeError(errorMessages.number),
+		totalPrice: yup
+			.number()
+			.positive(errorMessages.positive)
+			.integer()
+			.required(errorMessages.required)
+			.typeError(errorMessages.number),
+		provider: yup.string().required(errorMessages.required),
+		description: yup.string().required(errorMessages.required),
 	})
 	.required();
 
-interface IFormInput {
+export interface IFormInput {
 	date: Date;
+	status: string;
 	productName: string;
 	quantity: number;
 	calculateUnit: string;
@@ -33,60 +50,84 @@ interface IFormInput {
 }
 
 function ManagementProduct() {
+	const title = 'Hàng hoá';
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<IFormInput>({
-		resolver: yupResolver(schema),
-	});
-	const [startDate, setStartDate] = useState(new Date());
-	const [isImport, setIsImport] = useState<boolean>(true);
+	} = useForm<IFormInput>({ resolver: yupResolver(schema) });
+	const [status, setStatus] = useState<boolean>(true);
+	const [startDate, setStartDate] = useState<Date>(new Date());
 
-	const onSubmit = (data: IFormInput) => console.log(data);
+	const onSubmit = (data: IFormInput) => {
+		setStatus(data.status === 'Import');
+		const payload = { ...data, startDate };
+		console.log('onSubmit=>>>>:', payload);
+	};
+
 	return (
 		<div className={clsx(styles.wrapper)}>
-			<label className={clsx(styles.title)}>Quản lý hàng hoá</label>
+			<label className={clsx(styles.title)}>{title}</label>
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div>
-					<label> {isImport ? 'Ngày nhập' : 'Ngày xuất'}</label>
+				<div className={clsx(styles.wrapperDatePicker)}>
+					<label> Thời gian tạo</label>
 					<DatePicker
-						{...register('date')}
+						className={clsx(styles.datePicker)}
 						dateFormat={'dd/MM/yyyy'}
 						locale={'vi'}
 						selected={startDate}
 						onChange={(date: Date) => setStartDate(date)}
 					/>
 				</div>
-				<div>
-					<label> Tên mặt hàng</label>
-					<input {...register('productName')} type={'text'} />
-				</div>
-				<div>
-					<label>Số lượng</label>
-					<input {...register('quantity')} type={'text'} />
-				</div>
-				<div>
-					<label>Đơn vị tính</label>
-					<input {...register('calculateUnit')} type={'text'} />
-				</div>
-				<div>
-					<label>{isImport ? 'Giá nhập' : 'Giá xuất'}</label>
-					<input {...register('price')} type={'text'} />
-				</div>
-				<div>
-					<label>Thành tiền</label>
-					<input {...register('totalPrice')} type={'text'} />
-				</div>
-				<div>
-					<label>Nhà cung cấp</label>
-					<input {...register('provider')} type={'text'} />
-				</div>
-				<div>
-					<label>Ghi chú</label>
-					<input {...register('description')} type={'text'} />
-				</div>
-				<input type='submit' />
+				<DropDownComponent
+					register={register}
+					errors={errors.status?.message}
+					name='status'
+					label='Trạng thái'
+					data={[{ import: 'Nhập' }, { export: 'Xuất' }]}
+				></DropDownComponent>
+				<InputComponent
+					register={register}
+					errors={errors.productName?.message}
+					name='productName'
+					label='Tên mặt hàng'
+				/>
+				<InputComponent
+					register={register}
+					errors={errors.quantity?.message}
+					name='quantity'
+					label='Số lượng'
+				/>
+				<InputComponent
+					register={register}
+					errors={errors.calculateUnit?.message}
+					name='calculateUnit'
+					label='Đơn vị tính'
+				/>
+				<InputComponent register={register} errors={errors.price?.message} name='price' label='Đơn giá' />
+				<InputComponent
+					register={register}
+					errors={errors.totalPrice?.message}
+					name='totalPrice'
+					label='Thành tiền'
+					disabled={true}
+				/>
+				<InputComponent
+					register={register}
+					errors={errors.provider?.message}
+					name='provider'
+					label='Nhà cung cấp'
+				/>
+				<InputComponent
+					register={register}
+					errors={errors.description?.message}
+					name='description'
+					label='Ghi chú'
+				/>
+				<button className={clsx(styles.submitBtn)} type='submit'>
+					Hoàn tất
+				</button>
 			</form>
 		</div>
 	);
