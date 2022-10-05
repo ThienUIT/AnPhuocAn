@@ -7,16 +7,16 @@ import { IRoutePath } from '@/shared/routes';
 function SideBarComponent() {
 	const sidebar = [
 		{
-			title: 'Dashboard',
+			title: 'Trang chủ',
 			to: IRoutePath.home,
 		},
 		{
-			title: 'Base',
+			title: 'Sản phẩm',
 			to: IRoutePath.product,
 		},
 		{
-			title: 'Button',
-			to: IRoutePath.any,
+			title: 'Lịch sử',
+			to: IRoutePath.archived,
 		},
 		{
 			title: 'Forms',

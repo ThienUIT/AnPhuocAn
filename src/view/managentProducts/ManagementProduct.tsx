@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import DatePicker from 'react-datepicker';
 import styles from './ManagementProduct.module.scss';
-import { FieldError, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputComponent from '@/shared/components/input/InputComponent';
@@ -62,27 +62,22 @@ function ManagementProduct() {
 	const [startDate, setStartDate] = useState<Date>(new Date());
 
 	// delay api
-	const addProduct = useProductStore((state) => state.addProduct);
-	const saveProduct = useProductStore((state) => state.saveProduct);
+	const findAllProduct = useProductStore((state) => state.findAllProduct);
 	const product = useProductStore((state) => state.product);
 
-	const onSubmit = (data: IFormInput) => {
+	const onSubmit = async (data: IFormInput) => {
 		setStatus(data.status === 'Import');
 		const payload = { ...data, startDate };
-		console.log('onSubmit=>>>>:', payload);
+		await findAllProduct();
+		// console.log('onSubmit=>>>>:', payload);
 	};
 
-	useEffect(() => {
-		(async function () {
-			const res = await addProduct();
-			saveProduct(res);
-			console.log('product=>>>', product);
-		})();
-	}, []);
+	console.log(product);
 
 	return (
 		<div className={clsx(styles.wrapper)}>
 			<label className={clsx(styles.title)}>{title}</label>
+
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className={clsx(styles.wrapperDatePicker)}>
 					<label> Thời gian tạo</label>
