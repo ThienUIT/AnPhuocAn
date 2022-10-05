@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PaginateComponent from '@/shared/components/paginate/paginate.component';
+import productServices from '@/core/services/product.services';
 
 function HomePage() {
 	const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -19,7 +20,7 @@ function HomePage() {
 	useEffect(() => {
 		// @ts-ignore
 		const a = [...Array(numberOfPage).keys()];
-		console.log(a);
+		// console.log(a);
 	}, []);
 	return (
 		<div>

@@ -17,7 +17,7 @@ interface TypeProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HT
 const DropDownComponent = (props: TypeProps) => {
 	const { label, register, name, errors, data } = props;
 	const [status, setStatus] = useState<TDropdown | null>();
-	console.log(data);
+	// console.log(data);
 	return (
 		<>
 			<div className={clsx(styles.wrapper)}>

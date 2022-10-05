@@ -8,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import InputComponent from '@/shared/components/input/InputComponent';
 import { errorMessages } from '@/shared/common';
 import DropDownComponent from '@/shared/components/dropdown/DropDownComponent';
+import { useProductStore } from '@/view/store/product.store';
 
 const schema = yup
 	.object({
@@ -60,11 +61,24 @@ function ManagementProduct() {
 	const [status, setStatus] = useState<boolean>(true);
 	const [startDate, setStartDate] = useState<Date>(new Date());
 
+	// delay api
+	const addProduct = useProductStore((state) => state.addProduct);
+	const saveProduct = useProductStore((state) => state.saveProduct);
+	const product = useProductStore((state) => state.product);
+
 	const onSubmit = (data: IFormInput) => {
 		setStatus(data.status === 'Import');
 		const payload = { ...data, startDate };
 		console.log('onSubmit=>>>>:', payload);
 	};
+
+	useEffect(() => {
+		(async function () {
+			const res = await addProduct();
+			saveProduct(res);
+			console.log('product=>>>', product);
+		})();
+	}, []);
 
 	return (
 		<div className={clsx(styles.wrapper)}>
@@ -111,7 +125,6 @@ function ManagementProduct() {
 					errors={errors.totalPrice?.message}
 					name='totalPrice'
 					label='Thành tiền'
-					disabled={true}
 				/>
 				<InputComponent
 					register={register}
