@@ -1,7 +1,7 @@
 import create from 'zustand';
 import productRepository from '@/core/repositories/product.repository';
 
-interface IProductStore {
+export interface IProductStore {
 	product: any;
 	addProduct: () => Promise<void>;
 	findAllProduct: () => Promise<void>;

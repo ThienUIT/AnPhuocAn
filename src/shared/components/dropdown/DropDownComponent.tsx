@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 type TDropdown = {
-	[s in string]: string;
+	[s in string]?: string;
 };
 
 interface TypeProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
@@ -17,7 +17,6 @@ interface TypeProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HT
 const DropDownComponent = (props: TypeProps) => {
 	const { label, register, name, errors, data } = props;
 	const [status, setStatus] = useState<TDropdown | null>();
-	// console.log(data);
 	return (
 		<>
 			<div className={clsx(styles.wrapper)}>
@@ -39,7 +38,7 @@ const DropDownComponent = (props: TypeProps) => {
 						);
 					})}
 				</select>
-				{/*{errors && <span className={clsx(styles.errorsMessage)}>{errors.message}</span>}*/}
+				{errors && <span className={clsx(styles.errorsMessage)}>{errors}</span>}
 			</div>
 		</>
 	);

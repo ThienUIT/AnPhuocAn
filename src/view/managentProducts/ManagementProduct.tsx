@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import DatePicker from 'react-datepicker';
 import styles from './ManagementProduct.module.scss';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { calculateUnit, errorMessages, product, statusProduct } from '@/shared/common';
 import InputComponent from '@/shared/components/input/InputComponent';
-import { errorMessages } from '@/shared/common';
 import DropDownComponent from '@/shared/components/dropdown/DropDownComponent';
-import { useProductStore } from '@/view/store/product.store';
+import InputCurrencyComponent from '@/shared/components/inputCurrency/InputCurrencyComponent';
+import { IProductStore, useProductStore } from '@/view/store/product.store';
 
 const schema = yup
 	.object({
@@ -33,8 +34,8 @@ const schema = yup
 			.integer()
 			.required(errorMessages.required)
 			.typeError(errorMessages.number),
-		provider: yup.string().required(errorMessages.required),
-		description: yup.string().required(errorMessages.required),
+		provider: yup.string(),
+		description: yup.string(),
 	})
 	.required();
 
@@ -52,32 +53,44 @@ export interface IFormInput {
 
 function ManagementProduct() {
 	const title = 'Hàng hoá';
-
+	//useState
+	const [startDate, setStartDate] = useState<Date>(new Date());
+	//store
+	const findAllProduct = useProductStore((state: IProductStore) => state.findAllProduct);
+	// react-hook-form
 	const {
 		register,
 		handleSubmit,
+		getValues,
+		setValue,
+		control,
 		formState: { errors },
 	} = useForm<IFormInput>({ resolver: yupResolver(schema) });
-	const [status, setStatus] = useState<boolean>(true);
-	const [startDate, setStartDate] = useState<Date>(new Date());
 
+	const quantity = useWatch({
+		name: 'quantity',
+		control,
+	});
+	const price = useWatch({
+		name: 'price',
+		control,
+	});
+
+	useEffect(() => {
+		const totalPrice = quantity * price;
+		setValue('totalPrice', totalPrice === totalPrice ? totalPrice : 0);
+	}, [quantity, price]);
 	// delay api
-	const findAllProduct = useProductStore((state) => state.findAllProduct);
-	const product = useProductStore((state) => state.product);
-
+	// const product = useProductStore((state) => state.product);
 	const onSubmit = async (data: IFormInput) => {
-		setStatus(data.status === 'Import');
 		const payload = { ...data, startDate };
-		await findAllProduct();
-		// console.log('onSubmit=>>>>:', payload);
+		console.log(payload);
+		// await findAllProduct();
+		// addProduct(payload);
 	};
-
-	console.log(product);
-
 	return (
 		<div className={clsx(styles.wrapper)}>
 			<label className={clsx(styles.title)}>{title}</label>
-
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className={clsx(styles.wrapperDatePicker)}>
 					<label> Thời gian tạo</label>
@@ -94,32 +107,43 @@ function ManagementProduct() {
 					errors={errors.status?.message}
 					name='status'
 					label='Trạng thái'
-					data={[{ import: 'Nhập' }, { export: 'Xuất' }]}
-				></DropDownComponent>
-				<InputComponent
+					data={statusProduct}
+				/>
+				<DropDownComponent
 					register={register}
 					errors={errors.productName?.message}
 					name='productName'
 					label='Tên mặt hàng'
+					data={product}
 				/>
-				<InputComponent
+				<InputCurrencyComponent
 					register={register}
 					errors={errors.quantity?.message}
 					name='quantity'
 					label='Số lượng'
+					value={getValues('quantity')}
 				/>
-				<InputComponent
+				<DropDownComponent
 					register={register}
 					errors={errors.calculateUnit?.message}
 					name='calculateUnit'
 					label='Đơn vị tính'
+					data={calculateUnit}
 				/>
-				<InputComponent register={register} errors={errors.price?.message} name='price' label='Đơn giá' />
-				<InputComponent
+				<InputCurrencyComponent
+					register={register}
+					errors={errors.price?.message}
+					name='price'
+					label='Đơn giá'
+					value={getValues('price')}
+				/>
+				<InputCurrencyComponent
 					register={register}
 					errors={errors.totalPrice?.message}
 					name='totalPrice'
 					label='Thành tiền'
+					value={getValues('price') * getValues('quantity')}
+					disabled={true}
 				/>
 				<InputComponent
 					register={register}
