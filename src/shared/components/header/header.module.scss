@@ -14,14 +14,21 @@
   align-items: center;
 }
 
-.containerImg {
-  width: 288px;
+.container-img {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  &>img{
+    object-fit: cover;
+    height: 50px;
+  }
 }
 
 .container-input {
   display: flex;
   justify-content: space-between;
-  flex-grow: 1;
+  flex-grow: 2;
+  padding-left: 50px;
 }
 
 .input-search {

@@ -29,3 +29,22 @@ export function separateComma(val: number): string {
 	// return result with - sign if negative
 	return sign < 0 ? '-' + result : result;
 }
+
+export function TransformDate(data: string) {
+	const date = new Date(data);
+	const month = date.getMonth();
+	const year = date.getFullYear();
+	let day = date.getDate();
+
+	return `${day < 10 ? '0' + day : day}/${month + 1 < 10 ? '0' + (month + 1) : month + 1}/${year}`;
+}
+
+export const productName = {
+	A95: 'Xăng A95',
+	DO: 'Dầu DO',
+};
+
+export const calculateUnit = {
+	litre: 'Lít',
+	barrel: 'Thùng',
+};

@@ -6,8 +6,8 @@ function HeaderComponents() {
 	return (
 		<header className={clsx(styles.wrapper)}>
 			<div className={clsx(styles.inner)}>
-				<div className={clsx(styles.containerImg)}>
-					<img src='public/logo_oil.png' width={101} height={30} />
+				<div className={clsx(styles['container-img'])}>
+					<img src='logo_oil.png' />
 				</div>
 				<div className={clsx(styles['container-input'])}>
 					<div className={clsx(styles['input-search'])}>

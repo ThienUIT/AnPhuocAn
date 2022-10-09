@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PaginateComponent from '@/shared/components/paginate/paginate.component';
 import productServices from '@/core/services/product.services';
+import { useProductStore } from '../store/product.store';
 
 function HomePage() {
 	const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
