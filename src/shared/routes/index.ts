@@ -8,18 +8,28 @@ export interface IRoute {
 	component: (params: any) => JSX.Element;
 }
 
-export const IRoutePath = {
+export const RoutPath = {
 	home: '/',
 	product: '/product',
-	archived: '/archived',
+	archived: {
+		importProduct: '/archived/importProduct',
+		exportProduct: '/archived/exportProduct',
+	},
+	any: '/*',
+};
+
+export const IDefineRoutePath = {
+	home: '/',
+	product: '/product',
+	archived: '/archived/:statusProduct',
 	any: '/*',
 };
 
 const routes: IRoute[] = [
-	{ path: IRoutePath.home, component: HomePage },
-	{ path: IRoutePath.product, component: ManagementProduct },
-	{ path: IRoutePath.archived, component: ArchivedProduct },
-	{ path: IRoutePath.any, component: NoFoundPage },
+	{ path: IDefineRoutePath.home, component: HomePage },
+	{ path: IDefineRoutePath.product, component: ManagementProduct },
+	{ path: IDefineRoutePath.archived, component: ArchivedProduct },
+	{ path: IDefineRoutePath.any, component: NoFoundPage },
 ];
 
 export default routes;

@@ -1,5 +1,5 @@
 import httpConnection from '@/core/config';
-import { findAllProduct, findImportProduct } from '@/shared/common/makeData';
+import { findAllProduct, findImportProduct, findExportProduct } from '@/shared/common/makeData';
 import { IProductResponse } from '../response';
 
 const productRepository = {
@@ -16,6 +16,7 @@ const productRepository = {
 			.get('/product/importProduct')
 			.then((val) => val.data)
 			.catch((error) => {
+				console.error('No internet', error.message);
 				return Promise.resolve(findImportProduct);
 			});
 	},
@@ -24,7 +25,8 @@ const productRepository = {
 			.get('/product/exportProduct')
 			.then((val) => val.data)
 			.catch((error) => {
-				return Promise.resolve(this.findExportProduct);
+				console.error('No internet', error.message);
+				return Promise.resolve(findExportProduct);
 			});
 	},
 };

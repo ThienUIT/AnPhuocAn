@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
 	Column,
 	Table,
@@ -16,6 +16,7 @@ import {
 	SortingFn,
 	ColumnDef,
 	flexRender,
+	VisibilityState,
 } from '@tanstack/react-table';
 
 import { RankingInfo, rankItem, compareItems } from '@tanstack/match-sorter-utils';
@@ -30,6 +31,8 @@ import {
 } from '@/shared/common/transform.util';
 import clsx from 'clsx';
 import styles from './ArchivedProduct.module.scss';
+import { count } from 'console';
+import { useParams } from 'react-router-dom';
 
 declare module '@tanstack/table-core' {
 	interface FilterFns {
@@ -39,6 +42,11 @@ declare module '@tanstack/table-core' {
 		itemRank: RankingInfo;
 	}
 }
+
+const paramsRoute = {
+	export: 'exportProduct',
+	import: 'importProduct',
+};
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 	// Rank the item
@@ -67,7 +75,11 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
 
 function ArchivedProduct() {
 	const rerender = React.useReducer(() => ({}), {})[1];
+	let { statusProduct } = useParams<{ statusProduct: 'importProduct' | 'exportProduct' }>(); // :statusProduct
+
 	const findImportProduct = useProductStore((state) => state.findImportProduct);
+	const findExportProduct = useProductStore((state) => state.findExportProduct);
+	const deleteProduct = useProductStore((state) => state.deleteProduct);
 
 	const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 	const [globalFilter, setGlobalFilter] = React.useState('');
@@ -75,14 +87,15 @@ function ArchivedProduct() {
 	const columns = React.useMemo<ColumnDef<IProductResponse, any>[]>(
 		() => [
 			{
-				accessorFn: (row) => row.date,
+				accessorFn: (row) => {
+					return row.date;
+				},
 				id: 'date',
 				cell: (info) => {
 					return TransformDate(info.getValue());
 				},
 				header: (props) => {
-					console.log(props.table.getColumn('isImportProduct'));
-					return <span>Ngày nhập</span>;
+					return <span>{statusProduct === paramsRoute.import ? 'Ngày nhập' : 'Ngày xuất'}</span>;
 				},
 				footer: (props) => props.column.id,
 			},
@@ -138,12 +151,17 @@ function ArchivedProduct() {
 				header: () => <span>Ghi chú</span>,
 				footer: (props) => props.column.id,
 			},
-			{
-				accessorFn: (row) => row.isImportProduct,
-				id: 'isImportProduct',
-				enableHiding: true,
-			},
-
+			// {
+			// 	accessorFn: (row) => row.isImportProduct,
+			// 	id: 'isImportProduct',
+			// 	cell: (info) => {
+			// 		if (countRef.current === 0) {
+			// 			setIsImportProduct(info.getValue());
+			// 			setColumnVisibility({ isImportProduct: false });
+			// 			countRef.current = countRef.current + 1;
+			// 		}
+			// 	},
+			// },
 			// {
 			// 	accessorFn: (row) => `${row.firstName} ${row.lastName}`,
 			// 	id: 'fullName',
@@ -157,7 +175,10 @@ function ArchivedProduct() {
 		[],
 	);
 
-	const data = useProductStore((state) => state.importProduct);
+	const data = useProductStore((state) => {
+		if (statusProduct === paramsRoute.import) return state.importProduct;
+		else return state.exportProduct;
+	});
 
 	const table = useReactTable({
 		data,
@@ -179,6 +200,7 @@ function ArchivedProduct() {
 		getFacetedRowModel: getFacetedRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		getFacetedMinMaxValues: getFacetedMinMaxValues(),
+
 		debugTable: true,
 		debugHeaders: true,
 		debugColumns: false,
@@ -193,10 +215,20 @@ function ArchivedProduct() {
 	}, [table.getState().columnFilters[1]?.id]);
 
 	useEffect(() => {
-		findImportProduct();
-
-		// return () => console.log();
-	}, []);
+		if (statusProduct === paramsRoute.import) findImportProduct();
+		else {
+			findExportProduct();
+		}
+		// console.log(table.getLeafHeaders()[0].)
+		// if (table.getLeafHeaders()) {
+		// 	if (table.getState().sorting[1]?.id !== 'productName') {
+		// 		table.setSorting([{ id: 'productName', desc: false }]);
+		// 	}
+		// }
+		return () => {
+			deleteProduct();
+		};
+	}, [statusProduct]);
 
 	return (
 		<div className='p-2'>

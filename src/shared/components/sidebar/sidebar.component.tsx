@@ -2,37 +2,37 @@ import React from 'react';
 import styles from './sidebar.module.scss';
 import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
-import { IRoutePath } from '@/shared/routes';
+import { RoutPath } from '@/shared/routes';
 
 function SideBarComponent() {
 	const sidebar = [
 		{
 			title: 'Trang chủ',
-			to: IRoutePath.home,
+			to: RoutPath.home,
 		},
 		{
 			title: 'Sản phẩm',
-			to: IRoutePath.product,
+			to: RoutPath.archived.exportProduct,
 		},
 		{
 			title: 'Lịch sử',
-			to: IRoutePath.archived,
+			to: RoutPath.archived.importProduct,
 		},
 		{
 			title: 'Forms',
-			to: IRoutePath.any,
+			to: RoutPath.any,
 		},
 		{
 			title: 'Icon',
-			to: IRoutePath.any,
+			to: RoutPath.any,
 		},
 		{
 			title: 'Notification',
-			to: IRoutePath.any,
+			to: RoutPath.any,
 		},
 		{
 			title: 'Widget',
-			to: IRoutePath.any,
+			to: RoutPath.any,
 		},
 	];
 

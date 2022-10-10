@@ -28,11 +28,14 @@ export const useProductStore = create<IProductStore>((set) => ({
 	},
 	findExportProduct: async (): Promise<void> => {
 		const res = await productRepository.findExportProduct();
+		console.log(res);
 		set({ exportProduct: res });
 	},
 	addProduct: () => {
 		return Promise.resolve();
 	},
-	deleteProduct: () => {},
+	deleteProduct: () => {
+		set({ product: [], importProduct: [], exportProduct: [] });
+	},
 	updateProduct: () => {},
 }));
