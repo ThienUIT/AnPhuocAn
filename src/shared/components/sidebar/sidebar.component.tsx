@@ -11,28 +11,16 @@ function SideBarComponent() {
 			to: RoutPath.home,
 		},
 		{
-			title: 'Sản phẩm',
-			to: RoutPath.archived.exportProduct,
+			title: 'Quản lý hàng hoá',
+			to: RoutPath.product,
 		},
 		{
-			title: 'Lịch sử',
+			title: 'Lịch sử nhập',
 			to: RoutPath.archived.importProduct,
 		},
 		{
-			title: 'Forms',
-			to: RoutPath.any,
-		},
-		{
-			title: 'Icon',
-			to: RoutPath.any,
-		},
-		{
-			title: 'Notification',
-			to: RoutPath.any,
-		},
-		{
-			title: 'Widget',
-			to: RoutPath.any,
+			title: 'Lịch sử xuất',
+			to: RoutPath.archived.exportProduct,
 		},
 	];
 

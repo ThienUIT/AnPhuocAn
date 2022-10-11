@@ -19,7 +19,7 @@ function LayoutComponent({ children }: { children: ReactElement }) {
 				<div className={clsx(styles['main-content'])}>{children}</div>
 				{renderSideRight()}
 			</div>
-			<div>Footer</div>
+			{/* <div>Footer</div> */}
 		</div>
 	);
 }
